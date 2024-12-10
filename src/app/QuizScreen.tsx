@@ -6,6 +6,7 @@ import Card from "../components/Card";
 import CustomButton from "../components/CustomButton";
 import { useQuizContext } from "../providers/QuizProvider";
 import { useEffect, useState } from "react";
+import { useTimer } from "../hooks/useTimer";
 
 export default function QuizScreen() {
   const {
@@ -19,24 +20,21 @@ export default function QuizScreen() {
     bestScore,
   } = useQuizContext();
 
-  const [time, setTime] = useState(20);
+  const { time, startTimer, clearTimer } = useTimer(30);
 
   useEffect(() => {
-    setTime(20);
-    const interval = setInterval(() => {
-      setTime((prevTime) => prevTime - 1);
-    }, 1000);
+    startTimer();
 
     return () => {
-      clearInterval(interval);
+      clearTimer();
     };
   }, [question]);
 
   useEffect(() => {
-    if(time <= 0) {
+    if (time <= 0) {
       onNext();
     }
-  }, [time])
+  }, [time]);
 
   return (
     <SafeAreaView style={styles.page}>

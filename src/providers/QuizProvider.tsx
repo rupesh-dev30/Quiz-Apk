@@ -7,6 +7,7 @@ import {
 } from "react";
 import questions from "../questions";
 import { QuestionProps } from "../types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type QuizContextProps = {
   question?: QuestionProps;
@@ -43,9 +44,14 @@ export default function QuizProvider({ children }: PropsWithChildren) {
   const isFinished = questionIndex >= questions.length;
 
   useEffect(() => {
+    loadBestScore();
+  }, []);
+
+  useEffect(() => {
     //check if there is a new best score
     if (isFinished === true && score > bestScore) {
       setBestScore(score);
+      savedBestScore(score); // sending value because it store older value, as setBestScore wont set immediately. so we pass the best score to currentBestScore through parameter
     }
   }, [isFinished]);
 
@@ -72,6 +78,23 @@ export default function QuizProvider({ children }: PropsWithChildren) {
 
   console.warn("Score", score);
 
+  const savedBestScore = async (value: number) => {
+    try {
+      console.log("Saved Best Score: ", value);
+
+      await AsyncStorage.setItem("best-score", value.toString());
+    } catch (e) {}
+  };
+
+  const loadBestScore = async () => {
+    try {
+      const value = await AsyncStorage.getItem("best-score");
+      if (value !== null) {
+        setBestScore(Number.parseInt(value));
+      }
+    } catch (e) {}
+  };
+
   return (
     <QuizContext.Provider
       value={{
@@ -84,7 +107,7 @@ export default function QuizProvider({ children }: PropsWithChildren) {
         totalQuestion: questions.length,
         correctAnswer,
         isFinished,
-        bestScore
+        bestScore,
       }}
     >
       {children}
