@@ -1,27 +1,24 @@
 import { View } from "react-native";
-import React, { useState } from "react";
-import { QuestionProps } from "../types";
+import React, { useEffect, useState } from "react";
+import { Question, QuestionProps } from "../types";
 import AnswerOptions from "./AnswerOptions";
 import Card from "./Card";
 
-export default function QuestionCard({ question }: QuestionProps) {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>();
+export default function QuestionCard({ question }: Question) {
+  useEffect(() => {
+    console.warn("load");
+  }, []);
 
-  const onOptionsSelected = (option: string) => {
-    setSelectedOption(option)
-    console.warn("Selected: ", option);
-  };
+  useEffect(() => {
+    console.warn("load");
+    // return console.log("cleanup");
+  }, [question]);
 
   return (
     <Card title={question.title}>
       <View style={{ gap: 10 }}>
         {question.options.map((option) => (
-          <AnswerOptions
-            key={option}
-            option={option}
-            isSelected={option === selectedOption}
-            onPress={onOptionsSelected}
-          />
+          <AnswerOptions key={option} option={option} />
         ))}
       </View>
     </Card>

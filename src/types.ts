@@ -3,9 +3,11 @@ export type AnswerProps = {
 };
 
 export type QuestionProps = {
-  question: {
-    title: string;
-    options: string[];
-    correctAnswer: string;
-  };
+  title: string;
+  options: string[];
+  correctAnswer: string;
 };
+
+export type Question = {
+  question: QuestionProps
+}

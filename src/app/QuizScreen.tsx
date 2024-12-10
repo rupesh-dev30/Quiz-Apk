@@ -1,37 +1,66 @@
-import { View, Text, StyleSheet, Button, Pressable } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
 import QuestionCard from "../components/QuestionCard";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import questions from "../questions";
 import Card from "../components/Card";
 import CustomButton from "../components/CustomButton";
+import { useQuizContext } from "../providers/QuizProvider";
+import { useEffect, useState } from "react";
 
 export default function QuizScreen() {
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const question = questions[questionIndex];
+  const {
+    question,
+    questionIndex,
+    onNext,
+    score,
+    totalQuestion,
+    correctAnswer,
+    isFinished,
+    bestScore,
+  } = useQuizContext();
 
-  const onNext = () => {
-    setQuestionIndex((curr) => curr + 1);
-  };
+  const [time, setTime] = useState(20);
+
+  useEffect(() => {
+    setTime(20);
+    const interval = setInterval(() => {
+      setTime((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [question]);
+
+  useEffect(() => {
+    if(time <= 0) {
+      onNext();
+    }
+  }, [time])
 
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
-        {/* Header */}
-        <View>
-          <Text style={styles.title}>Question 1/5</Text>
-        </View>
+        {!isFinished && (
+          <View>
+            <Text style={styles.title}>
+              Question {questionIndex + 1}/{totalQuestion}
+            </Text>
+          </View>
+        )}
 
         {question ? (
           <View>
             <QuestionCard question={question} />
-            <Text style={styles.time}>30 sec</Text>
+            <Text style={styles.time}>{time} sec</Text>
           </View>
         ) : (
           <Card title="Well Done">
-            <Text>Correct Answer: 2/5</Text>
-            <Text>Best score: 10</Text>
+            <Text>
+              Correct Answer: {correctAnswer}/{totalQuestion}
+            </Text>
+            <Text>Score: {score}</Text>
+            <Text>Best score: {bestScore}</Text>
           </Card>
         )}
 
