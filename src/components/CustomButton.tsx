@@ -3,15 +3,17 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  PressableProps,
+  // PressableProps,
 } from "react-native";
+
+import { ComponentProps } from "react";
 
 type CustomButtonProps = {
   buttonText: string;
   icon?: React.ReactNode;
   // onPress: () => void;
   // onLongPress?: () => void;
-} & PressableProps;
+} & ComponentProps<typeof Pressable>;  // or & PressableProps
 
 export default function CustomButton({
   buttonText,
@@ -20,7 +22,7 @@ export default function CustomButton({
   // onLongPress,
   ...pressableProps
 }: CustomButtonProps) {
-  console.log(pressableProps);
+  // console.log(pressableProps);
 
   return (
     <Pressable
