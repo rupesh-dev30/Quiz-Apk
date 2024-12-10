@@ -1,13 +1,20 @@
 import { View, Text, StyleSheet, Button, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useState } from "react";
 import QuestionCard from "../components/QuestionCard";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import questions from "../questions";
 import Card from "../components/Card";
 import CustomButton from "../components/CustomButton";
-const question = questions[1];
 
 export default function QuizScreen() {
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const question = questions[questionIndex];
+
+  const onNext = () => {
+    setQuestionIndex((curr) => curr + 1);
+  };
+
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -28,12 +35,14 @@ export default function QuizScreen() {
           </Card>
         )}
 
-        <CustomButton
-          buttonText="Next"
-          icon={<AntDesign name="arrowright" size={18} color="white" />}
-          onPress={() => console.warn("Custom Button Pressed")}
-          onLongPress={() => console.warn("LONG PRESSED")}
-        />
+        <View>
+          <CustomButton
+            buttonText="Next"
+            icon={<AntDesign name="arrowright" size={18} color="white" />}
+            onPress={() => onNext()}
+            // onLongPress={() => console.warn("LONG PRESSED")}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
